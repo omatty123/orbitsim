@@ -754,9 +754,10 @@
         }
         
         function drawInitialOrbit(centerX, centerY, width, height) {
-            // Minimum orbit size is 15% of the smaller canvas dimension - always clearly visible
-            const minOrbitSize = Math.min(width, height) * 0.15;
-            const orbitRadius = Math.max(INITIAL_ORBIT_RADIUS * camera.zoom, minOrbitSize);
+            const orbitRadius = INITIAL_ORBIT_RADIUS * camera.zoom;
+            // Only draw if it's visible (at least 2px)
+            if (orbitRadius < 2) return;
+            
             ctx.beginPath();
             ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
