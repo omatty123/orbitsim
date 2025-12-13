@@ -94,13 +94,6 @@
             display: block;
         }
 
-        .stars {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
         .control-panel {
             background: rgba(18, 18, 26, 0.95);
             border-radius: 12px;
@@ -365,21 +358,6 @@
             box-shadow: 0 0 8px var(--sun-gold);
         }
 
-        .mass-indicator {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-
-        .mass-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--escape-red), var(--sun-gold), var(--sun-gold));
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-
         .light-delay-indicator {
             background: rgba(255, 200, 50, 0.1);
             border: 1px solid var(--sun-gold);
@@ -496,9 +474,6 @@
                     <div class="slider-container">
                         <input type="range" id="massSlider" min="10" max="100" value="100">
                         <span class="slider-value" id="massValue">100%</span>
-                    </div>
-                    <div class="mass-indicator">
-                        <div class="mass-fill" id="massFill" style="width: 100%"></div>
                     </div>
                 </div>
 
@@ -618,13 +593,13 @@
         // State
         let sunMass = INITIAL_SUN_MASS;
         let targetMass = INITIAL_SUN_MASS;
-        let pendingMassChange = null;  // {newMass, delayRemaining}
+        let pendingMassChange = null;
         let massPercentage = 100;
         let showTrail = true;
         let speedMultiplier = 1000;
         let trail = [];
         const MAX_TRAIL_LENGTH = 800;
-        const LIGHT_DELAY_FRAMES = 500;  // ~8.3 minutes scaled to simulation time
+        const LIGHT_DELAY_FRAMES = 500;
         
         // Graph data
         const graphData = {
@@ -642,7 +617,7 @@
             targetZoom: 1,
             minZoom: 0.0001,
             maxZoom: 1,
-            padding: 80  // pixels from edge before zooming out
+            padding: 80
         };
         
         // Earth state
@@ -665,15 +640,11 @@
         }
         
         function updateCamera(width, height) {
-            // Calculate required zoom to keep Earth in view
             const earthDist = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
             const maxViewDist = Math.min(width, height) / 2 - camera.padding;
-            
-            // Calculate zoom needed to fit Earth
             const neededZoom = maxViewDist / earthDist;
             camera.targetZoom = Math.max(camera.minZoom, Math.min(camera.maxZoom, neededZoom));
             
-            // Instant zoom out to never lose Earth, smooth zoom in
             if (camera.targetZoom < camera.zoom) {
                 camera.zoom = camera.targetZoom;
             } else {
@@ -698,10 +669,13 @@
         }
         
         function drawSun(centerX, centerY) {
+            // Sun size based on actual gravitational mass (so it disappears when mass is removed)
             const baseRadius = 30 * (sunMass / INITIAL_SUN_MASS);
-            const radius = Math.max(baseRadius, 10) * camera.zoom;
-            const minRadius = 6;  // Minimum visible size
+            const radius = Math.max(baseRadius, sunMass > 50 ? 3 : 0) * camera.zoom;
+            const minRadius = sunMass > 50 ? 4 : 0;
             const drawRadius = Math.max(radius, minRadius);
+            
+            if (drawRadius <= 0) return; // Sun has vanished!
             
             // Outer glow
             const glowGradient = ctx.createRadialGradient(centerX, centerY, drawRadius * 0.5, centerX, centerY, drawRadius * 4);
@@ -739,7 +713,7 @@
             const x = pos.x;
             const y = pos.y;
             const baseRadius = 8;
-            const radius = Math.max(baseRadius * camera.zoom, 5);  // Minimum visible size
+            const radius = Math.max(baseRadius * camera.zoom, 5);
             
             // Glow
             const glowGradient = ctx.createRadialGradient(x, y, radius * 0.5, x, y, radius * 2.5);
@@ -778,8 +752,7 @@
             ctx.lineWidth = Math.max(2 * camera.zoom, 1);
             ctx.stroke();
             
-            // Gradient fade effect
-            for (let i = 0; i < trail.length; i += 3) {  // Skip some for performance at high zoom out
+            for (let i = 0; i < trail.length; i += 3) {
                 const alpha = (i / trail.length) * 0.3;
                 const pos = worldToScreen(trail[i].x, trail[i].y, centerX, centerY);
                 ctx.beginPath();
@@ -790,11 +763,13 @@
         }
         
         function drawInitialOrbit(centerX, centerY) {
+            // Always keep orbit visible with minimum radius of 40px
+            const orbitRadius = Math.max(INITIAL_ORBIT_RADIUS * camera.zoom, 40);
             ctx.beginPath();
-            ctx.arc(centerX, centerY, INITIAL_ORBIT_RADIUS * camera.zoom, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-            ctx.setLineDash([5, 10]);
-            ctx.lineWidth = 1;
+            ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.setLineDash([8, 8]);
+            ctx.lineWidth = 2;
             ctx.stroke();
             ctx.setLineDash([]);
         }
@@ -834,7 +809,6 @@
             
             if (graphData.velocities.length < 2) return;
             
-            // Find max values for scaling
             const maxVel = Math.max(...graphData.velocities, 1);
             const maxDist = Math.max(...graphData.distances, 1);
             
@@ -866,7 +840,6 @@
             }
             graphCtx.stroke();
             
-            // Draw current values
             graphCtx.fillStyle = '#4a90d9';
             graphCtx.font = '10px "JetBrains Mono", monospace';
             graphCtx.textAlign = 'right';
@@ -893,14 +866,12 @@
         }
         
         function updatePhysics(dt) {
-            // Handle light delay for gravitational effect
             if (pendingMassChange) {
                 pendingMassChange.delayRemaining -= 1;
                 if (pendingMassChange.delayRemaining <= 0) {
-                    // Gravity finally reaches Earth!
                     sunMass = pendingMassChange.newMass;
                     pendingMassChange = null;
-                    graphData.recording = true;  // Start recording after gravity hits
+                    graphData.recording = true;
                 }
             }
             
@@ -908,7 +879,7 @@
             const dy = -earth.y;
             const r = Math.sqrt(dx * dx + dy * dy);
             
-            if (r > 5) {  // Prevent singularity
+            if (r > 5) {
                 const F = G * sunMass / (r * r);
                 const ax = F * dx / r;
                 const ay = F * dy / r;
@@ -918,7 +889,6 @@
                 earth.x += earth.vx * dt;
                 earth.y += earth.vy * dt;
                 
-                // Add to trail
                 if (showTrail) {
                     trail.push({ x: earth.x, y: earth.y });
                     if (trail.length > MAX_TRAIL_LENGTH) {
@@ -957,7 +927,6 @@
             const escapeV = Math.sqrt(2 * G * sunMass / r);
             const energy = calculateEnergy();
             
-            // Scale to real units (roughly)
             const realV = (v / Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)) * 29.78;
             const realEscapeV = (escapeV / Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)) * 29.78 * Math.sqrt(2);
             const realDistance = r / INITIAL_ORBIT_RADIUS;
@@ -1000,27 +969,21 @@
             
             ctx.clearRect(0, 0, width, height);
             
-            // Update camera zoom based on Earth position
             updateCamera(width, height);
             
-            // Draw background
             drawStars(width, height);
             drawInitialOrbit(centerX, centerY);
             
-            // Update physics
             for (let i = 0; i < speedMultiplier; i++) {
                 updatePhysics(0.15);
             }
             
-            // Draw objects
             drawTrail(centerX, centerY);
             drawSun(centerX, centerY);
             drawEarth(centerX, centerY, earth.x, earth.y);
             
-            // Draw zoom indicator
             drawZoomIndicator(width, height);
             
-            // Update UI elements
             updateLightDelayUI();
             recordGraphData();
             drawGraph();
@@ -1048,7 +1011,6 @@
             trail = [];
             document.getElementById('massSlider').value = 100;
             document.getElementById('massValue').textContent = '100%';
-            document.getElementById('massFill').style.width = '100%';
             document.getElementById('lightDelayIndicator').style.display = 'none';
             graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
             updateStats();
@@ -1058,18 +1020,15 @@
         document.getElementById('massSlider').addEventListener('input', (e) => {
             massPercentage = parseInt(e.target.value);
             document.getElementById('massValue').textContent = massPercentage + '%';
-            document.getElementById('massFill').style.width = massPercentage + '%';
         });
         
         document.getElementById('applyMass').addEventListener('click', () => {
-            trail = [];  // Clear trail on mass change
+            trail = [];
             const newMass = INITIAL_SUN_MASS * (massPercentage / 100);
-            // Start light delay - mass change takes 8.3 minutes to reach Earth
             pendingMassChange = {
                 newMass: newMass,
                 delayRemaining: LIGHT_DELAY_FRAMES
             };
-            // Sun visually changes immediately (we can "see" it)
             targetMass = newMass;
         });
         
