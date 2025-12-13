@@ -598,7 +598,7 @@
         let showTrail = true;
         let speedMultiplier = 1000;
         let trail = [];
-        const MAX_TRAIL_LENGTH = 800;
+        const MAX_TRAIL_LENGTH = 10000;
         const LIGHT_DELAY_FRAMES = 500;
         
         // Graph data
@@ -748,23 +748,15 @@
                 ctx.lineTo(pos.x, pos.y);
             }
             
-            ctx.strokeStyle = 'rgba(74, 144, 217, 0.4)';
-            ctx.lineWidth = Math.max(2 * camera.zoom, 1);
+            ctx.strokeStyle = 'rgba(74, 144, 217, 0.6)';
+            ctx.lineWidth = Math.max(2 * camera.zoom, 1.5);
             ctx.stroke();
-            
-            for (let i = 0; i < trail.length; i += 3) {
-                const alpha = (i / trail.length) * 0.3;
-                const pos = worldToScreen(trail[i].x, trail[i].y, centerX, centerY);
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, Math.max(1.5 * camera.zoom, 0.5), 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(74, 144, 217, ${alpha})`;
-                ctx.fill();
-            }
         }
         
-        function drawInitialOrbit(centerX, centerY) {
-            // Always keep orbit visible with minimum radius of 40px
-            const orbitRadius = Math.max(INITIAL_ORBIT_RADIUS * camera.zoom, 40);
+        function drawInitialOrbit(centerX, centerY, width, height) {
+            // Minimum orbit size is 15% of the smaller canvas dimension - always clearly visible
+            const minOrbitSize = Math.min(width, height) * 0.15;
+            const orbitRadius = Math.max(INITIAL_ORBIT_RADIUS * camera.zoom, minOrbitSize);
             ctx.beginPath();
             ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
@@ -884,15 +876,32 @@
                 const ax = F * dx / r;
                 const ay = F * dy / r;
                 
+                const oldX = earth.x;
+                const oldY = earth.y;
+                
                 earth.vx += ax * dt;
                 earth.vy += ay * dt;
                 earth.x += earth.vx * dt;
                 earth.y += earth.vy * dt;
                 
+                // Record trail based on distance traveled, not time
                 if (showTrail) {
-                    trail.push({ x: earth.x, y: earth.y });
-                    if (trail.length > MAX_TRAIL_LENGTH) {
-                        trail.shift();
+                    const lastTrailPoint = trail.length > 0 ? trail[trail.length - 1] : null;
+                    const minTrailDistance = 2; // minimum distance between trail points
+                    
+                    if (!lastTrailPoint) {
+                        trail.push({ x: earth.x, y: earth.y });
+                    } else {
+                        const distFromLast = Math.sqrt(
+                            (earth.x - lastTrailPoint.x) ** 2 + 
+                            (earth.y - lastTrailPoint.y) ** 2
+                        );
+                        if (distFromLast >= minTrailDistance) {
+                            trail.push({ x: earth.x, y: earth.y });
+                            if (trail.length > MAX_TRAIL_LENGTH) {
+                                trail.shift();
+                            }
+                        }
                     }
                 }
             }
@@ -972,7 +981,7 @@
             updateCamera(width, height);
             
             drawStars(width, height);
-            drawInitialOrbit(centerX, centerY);
+            drawInitialOrbit(centerX, centerY, width, height);
             
             for (let i = 0; i < speedMultiplier; i++) {
                 updatePhysics(0.15);
