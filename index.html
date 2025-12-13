@@ -281,7 +281,12 @@
         .info-section h3 {
             font-size: 1.2rem;
             margin-bottom: 1rem;
+            margin-top: 1.5rem;
             color: var(--sun-gold);
+        }
+        
+        .info-section h3:first-child {
+            margin-top: 0;
         }
 
         .info-section p {
@@ -300,6 +305,98 @@
             color: var(--text-primary);
             font-size: 0.9rem;
             overflow-x: auto;
+        }
+        
+        .fate-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .fate-card {
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid;
+        }
+        
+        .fate-card.elliptical {
+            background: rgba(46, 213, 115, 0.1);
+            border-color: var(--bound-green);
+        }
+        
+        .fate-card.parabolic {
+            background: rgba(255, 215, 61, 0.1);
+            border-color: var(--sun-gold);
+        }
+        
+        .fate-card.hyperbolic {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--escape-red);
+        }
+        
+        .fate-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .fate-card.elliptical .fate-title { color: var(--bound-green); }
+        .fate-card.parabolic .fate-title { color: var(--sun-gold); }
+        .fate-card.hyperbolic .fate-title { color: var(--escape-red); }
+        
+        .fate-subtitle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .fate-card p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .precision-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
+        .precision-list li {
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            position: relative;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .precision-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--sun-gold);
+        }
+        
+        .precision-list li strong {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .credits {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+        }
+        
+        .credits p {
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .trail-toggle {
@@ -458,7 +555,7 @@
     <div class="container">
         <header>
             <h1>The Vanishing Sun</h1>
-            <p class="subtitle">An exploration of orbital mechanics when stellar mass disappears</p>
+            <p class="subtitle">What happens to Earth's orbit if half the Sun's mass suddenly disappears?</p>
         </header>
 
         <div class="main-layout">
@@ -550,20 +647,102 @@
                 In a stable circular orbit, Earth's velocity is precisely balanced with the Sun's gravitational pull. 
                 The orbital velocity for a circular orbit is given by:
             </p>
-            <div class="equation">v = √(GM/r)</div>
+            <div class="equation">v<sub>circular</sub> = √(GM/r)</div>
             <p>
-                When we suddenly remove mass from the Sun, Earth's velocity remains unchanged but the gravitational 
-                pull decreases. The critical threshold is at <strong>50% solar mass</strong>—at this point, Earth's 
-                existing velocity exactly equals the new escape velocity, resulting in a parabolic trajectory.
+                The escape velocity—the minimum speed needed to break free from gravity—is:
             </p>
-            <div class="equation">E = v²/2 − GM/r = 0 (at 50% mass)</div>
+            <div class="equation">v<sub>escape</sub> = √(2GM/r) = √2 × v<sub>circular</sub></div>
             <p>
-                Below 50%: Earth escapes on a hyperbolic path. Above 50%: Earth remains bound in an elliptical orbit, 
-                but with a much larger aphelion (farthest point from the Sun).
+                This √2 factor is the key to everything. Earth's circular orbit velocity is exactly 1/√2 ≈ 70.7% of escape velocity.
+            </p>
+            
+            <h3>The 50% Threshold</h3>
+            <p>
+                When we suddenly remove mass from the Sun, Earth's velocity stays the same but the escape velocity changes:
+            </p>
+            <div class="equation">v<sub>escape,new</sub> = √(2G × M<sub>new</sub>/r)</div>
+            <p>
+                At exactly <strong>50% solar mass</strong>, something magical happens. The new escape velocity becomes:
+            </p>
+            <div class="equation">v<sub>escape,new</sub> = √(2G × 0.5M/r) = √(GM/r) = v<sub>circular</sub></div>
+            <p>
+                Earth's existing velocity <em>exactly equals</em> the new escape velocity! This produces a <strong>parabolic trajectory</strong>—the boundary between bound and unbound orbits.
+            </p>
+            
+            <h3>Three Possible Fates</h3>
+            <div class="fate-cards">
+                <div class="fate-card elliptical">
+                    <div class="fate-title">&gt; 50% Mass Remains</div>
+                    <div class="fate-subtitle">Elliptical Orbit (Bound)</div>
+                    <p>Total energy E &lt; 0. Earth swings out to a distant aphelion but returns. The less mass removed, the smaller the ellipse.</p>
+                </div>
+                <div class="fate-card parabolic">
+                    <div class="fate-title">= 50% Mass Remains</div>
+                    <div class="fate-subtitle">Parabolic Escape (E = 0)</div>
+                    <p>Earth escapes to infinity, velocity approaching zero asymptotically. The mathematical knife-edge between bound and unbound.</p>
+                </div>
+                <div class="fate-card hyperbolic">
+                    <div class="fate-title">&lt; 50% Mass Remains</div>
+                    <div class="fate-subtitle">Hyperbolic Escape (Unbound)</div>
+                    <p>Total energy E &gt; 0. Earth escapes with residual velocity—it will still be moving even at infinite distance.</p>
+                </div>
+            </div>
+            
+            <h3>The Numerical Precision Problem</h3>
+            <p>
+                Here's where physics meets computer science. In this simulation, you might notice that 50% sometimes shows as 
+                "Hyperbolic" or "Elliptical" instead of "Parabolic." This isn't a bug—it's a fundamental limitation of 
+                floating-point arithmetic.
             </p>
             <p>
-                <strong>Light delay:</strong> In reality, gravitational changes propagate at the speed of light. 
-                Earth wouldn't "feel" the Sun's mass change for ~8.3 minutes. This simulation includes that delay.
+                Computers represent numbers in binary with finite precision. When we calculate 50%, we might actually get 
+                50.00000000001% or 49.99999999999%. The difference between these is physically meaningful:
+            </p>
+            <ul class="precision-list">
+                <li><strong>50.00000000001%</strong> → E slightly positive → Hyperbolic (escapes with tiny residual velocity)</li>
+                <li><strong>50.00000000000%</strong> → E = 0 exactly → Parabolic (velocity → 0 at infinity)</li>
+                <li><strong>49.99999999999%</strong> → E slightly negative → Elliptical (returns after millions of years)</li>
+            </ul>
+            <p>
+                This is why real astrophysics simulations use <strong>double precision</strong> (64-bit) floating-point numbers, 
+                which provide about 16 significant digits. Even then, for problems sensitive to exact thresholds, 
+                mathematicians prefer pencil-and-paper solutions with symbolic math.
+            </p>
+            <p>
+                The elegance of this problem is that the answer involves √2—an irrational number that <em>cannot</em> be 
+                represented exactly in any finite decimal or binary expansion. The 50% threshold is mathematically 
+                perfect but numerically unreachable.
+            </p>
+            
+            <h3>Light-Speed Gravity</h3>
+            <p>
+                This simulation includes one more realistic detail: gravitational changes propagate at the speed of light, 
+                not instantaneously. When the Sun's mass changes, Earth continues on its original orbit for ~8.3 minutes 
+                until the gravitational "news" arrives. This is consistent with General Relativity, where gravitational 
+                waves travel at <em>c</em>.
+            </p>
+            
+            <h3>Time to Escape</h3>
+            <p>
+                For the parabolic case (50% mass), the time to reach distance <em>r</em> from an initial circular orbit at <em>r₀</em> is:
+            </p>
+            <div class="equation">t = (1/3)√(4/GM₀) × (r<sup>3/2</sup> - r₀<sup>3/2</sup>)</div>
+            <p>
+                For Earth starting at 1 AU with half the Sun's mass remaining:
+            </p>
+            <ul class="precision-list">
+                <li>Reach 10 AU: ~2.5 years</li>
+                <li>Reach 100 AU: ~80 years</li>
+                <li>Reach 1000 AU: ~2,500 years</li>
+                <li>Reach infinity: ∞ (but velocity → 0)</li>
+            </ul>
+        </div>
+        
+        <div class="info-section credits">
+            <p>
+                This simulation was created to explore a classic orbital mechanics problem: what happens to a planet's 
+                orbit when its star suddenly loses mass? The answer reveals beautiful connections between energy conservation, 
+                the mathematics of conic sections, and the practical limits of numerical computation.
             </p>
         </div>
     </div>
@@ -918,7 +1097,10 @@
         
         function getOrbitType() {
             const energy = calculateEnergy();
-            const tolerance = 0.001;
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            // Scale tolerance based on current energy magnitude for better detection
+            const tolerance = 0.01 * Math.max(Math.abs(0.5 * v * v), Math.abs(G * sunMass / r), 0.01);
             
             if (Math.abs(sunMass - INITIAL_SUN_MASS) < 1) {
                 return 'circular';
