@@ -591,10 +591,13 @@
                 <div class="control-group">
                     <label class="control-label">Simulation Speed</label>
                     <div class="slider-container">
-                        <input type="range" id="speedSlider" min="1" max="7" value="7">
+                        <input type="range" id="speedSlider" min="1" max="10" value="7">
                         <span class="slider-value" id="speedValue">1000×</span>
                     </div>
                     <div class="speed-indicator">
+                        <div class="speed-dot active"></div>
+                        <div class="speed-dot active"></div>
+                        <div class="speed-dot active"></div>
                         <div class="speed-dot active"></div>
                         <div class="speed-dot active"></div>
                         <div class="speed-dot active"></div>
@@ -1113,12 +1116,22 @@
             const energy = calculateEnergy();
             const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
             const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
-            // Scale tolerance based on current energy magnitude for better detection
-            const tolerance = 0.01 * Math.max(Math.abs(0.5 * v * v), Math.abs(G * sunMass / r), 0.01);
 
             if (Math.abs(sunMass - INITIAL_SUN_MASS) < 1) {
                 return 'circular';
-            } else if (Math.abs(energy) < tolerance) {
+            }
+
+            // Special handling for 50% mass case - should always be parabolic
+            // Check mass percentage to override energy-based detection (avoids floating-point issues)
+            const currentMassPercent = (sunMass / INITIAL_SUN_MASS) * 100;
+            if (Math.abs(currentMassPercent - 50) < 0.5) {
+                return 'parabolic';
+            }
+
+            // For other cases, use energy-based detection with increased tolerance
+            const tolerance = 0.05 * Math.max(Math.abs(0.5 * v * v), Math.abs(G * sunMass / r), 0.01);
+
+            if (Math.abs(energy) < tolerance) {
                 return 'parabolic';
             } else if (energy < 0) {
                 return 'elliptical';
@@ -1223,9 +1236,32 @@
         }
 
         // Event listeners
-        document.getElementById('massSlider').addEventListener('input', (e) => {
+        const massSlider = document.getElementById('massSlider');
+
+        massSlider.addEventListener('input', (e) => {
             massPercentage = parseFloat(e.target.value);
             document.getElementById('massValue').textContent = massPercentage.toFixed(1) + '%';
+        });
+
+        // Ensure keyboard arrow keys work with 0.1 increments
+        massSlider.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                const step = 0.1;
+                let newValue = parseFloat(massSlider.value);
+
+                if (e.key === 'ArrowLeft') {
+                    newValue = Math.max(10, newValue - step);
+                } else {
+                    newValue = Math.min(100, newValue + step);
+                }
+
+                // Round to avoid floating point precision issues
+                newValue = Math.round(newValue * 10) / 10;
+                massSlider.value = newValue;
+                massPercentage = newValue;
+                document.getElementById('massValue').textContent = massPercentage.toFixed(1) + '%';
+            }
         });
 
         document.getElementById('applyMass').addEventListener('click', () => {
@@ -1239,10 +1275,13 @@
         });
 
         document.getElementById('speedSlider').addEventListener('input', (e) => {
-            const speeds = [1, 5, 20, 50, 100, 500, 1000];
+            const speeds = [1, 5, 20, 50, 100, 500, 1000, 5000, 10000, 50000];
             const speedIndex = parseInt(e.target.value) - 1;
             speedMultiplier = speeds[speedIndex];
-            document.getElementById('speedValue').textContent = speeds[speedIndex] + '×';
+
+            // Format large numbers with commas for readability
+            const formattedSpeed = speeds[speedIndex].toLocaleString();
+            document.getElementById('speedValue').textContent = formattedSpeed + '×';
 
             document.querySelectorAll('.speed-dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i <= speedIndex);
