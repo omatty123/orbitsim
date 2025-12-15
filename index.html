@@ -6,22 +6,25 @@
     <title>Orbital Mechanics: The Vanishing Sun</title>
     <link rel="icon" type="image/png" href="https://omatty123.github.io/orbitsim/vanishingsun.png">
 
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Orbital Mechanics: The Vanishing Sun">
-    <meta property="og:description" content="What happens to Earth's orbit if half the Sun's mass suddenly disappears?">
-    <meta property="og:url" content="https://omatty123.github.io/orbitsim/index.html">
-    <meta property="og:image" content="https://omatty123.github.io/orbitsim/vanishingsun.png">
-    <meta property="og:image:alt" content="The Vanishing Sun preview image">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Orbital Mechanics: The Vanishing Sun">
+<meta property="og:description" content="What happens to Earth's orbit if half the Sun's mass suddenly disappears?">
+<meta property="og:url" content="https://omatty123.github.io/orbitsim/index.html">
+<meta property="og:image" content="https://omatty123.github.io/orbitsim/vanishingsun.png">
+<meta property="og:image:alt" content="The Vanishing Sun preview image">
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Orbital Mechanics: The Vanishing Sun">
-    <meta name="twitter:description" content="What happens to Earth's orbit if half the Sun's mass suddenly disappears?">
-    <meta name="twitter:image" content="https://omatty123.github.io/orbitsim/vanishingsun.png">
-
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Orbital Mechanics: The Vanishing Sun">
+<meta name="twitter:description" content="What happens to Earth's orbit if half the Sun's mass suddenly disappears?">
+<meta name="twitter:image" content="https://omatty123.github.io/orbitsim/vanishingsun.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         :root {
             --bg-deep: #0a0a0f;
@@ -47,9 +50,17 @@
             overflow-x: hidden;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-        header { text-align: center; margin-bottom: 2rem; position: relative; }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
 
         h1 {
             font-size: clamp(2rem, 5vw, 3.5rem);
@@ -62,7 +73,11 @@
             background-clip: text;
         }
 
-        .subtitle { font-style: italic; color: var(--text-muted); font-size: 1.2rem; }
+        .subtitle {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
 
         .main-layout {
             display: grid;
@@ -72,7 +87,9 @@
         }
 
         @media (max-width: 900px) {
-            .main-layout { grid-template-columns: 1fr; }
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         .simulation-area {
@@ -85,7 +102,11 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        canvas { width: 100%; height: 100%; display: block; }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
         .control-panel {
             background: rgba(18, 18, 26, 0.95);
@@ -105,12 +126,18 @@
             gap: 0.5rem;
         }
 
-        .panel-title::before { content: '◈'; color: var(--sun-gold); }
+        .panel-title::before {
+            content: '◈';
+            color: var(--sun-gold);
+        }
 
-        .control-group { margin-bottom: 1.5rem; }
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
 
         .control-label {
             display: block;
+            font-size: 0.95rem;
             color: var(--text-muted);
             margin-bottom: 0.5rem;
             font-family: 'JetBrains Mono', monospace;
@@ -119,7 +146,11 @@
             letter-spacing: 0.1em;
         }
 
-        .slider-container { display: flex; align-items: center; gap: 1rem; }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
         input[type="range"] {
             flex: 1;
@@ -143,12 +174,14 @@
             transition: transform 0.2s;
         }
 
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
 
         .slider-value {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.9rem;
-            min-width: 62px;
+            min-width: 50px;
             text-align: right;
             color: var(--sun-gold);
         }
@@ -183,7 +216,9 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
         .stats-panel {
             margin-top: 1.5rem;
@@ -200,11 +235,21 @@
             font-size: 0.8rem;
         }
 
-        .stat-label { color: var(--text-muted); }
-        .stat-value { color: var(--text-primary); }
-        .stat-value.escape { color: var(--escape-red); }
-        .stat-value.bound { color: var(--bound-green); }
-        .stat-value.warp { color: var(--sun-gold); }
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+        }
+
+        .stat-value.escape {
+            color: var(--escape-red);
+        }
+
+        .stat-value.bound {
+            color: var(--bound-green);
+        }
 
         .orbit-status {
             text-align: center;
@@ -253,8 +298,10 @@
             margin-top: 1.5rem;
             color: var(--sun-gold);
         }
-
-        .info-section h3:first-child { margin-top: 0; }
+        
+        .info-section h3:first-child {
+            margin-top: 0;
+        }
 
         .info-section p {
             line-height: 1.8;
@@ -273,60 +320,105 @@
             font-size: 0.9rem;
             overflow-x: auto;
         }
-
+        
         .fate-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
             margin: 1.5rem 0;
         }
-
-        .fate-card { padding: 1.25rem; border-radius: 10px; border: 1px solid; }
-        .fate-card.elliptical { background: rgba(46, 213, 115, 0.1); border-color: var(--bound-green); }
-        .fate-card.parabolic { background: rgba(255, 215, 61, 0.1); border-color: var(--sun-gold); }
-        .fate-card.hyperbolic { background: rgba(255, 71, 87, 0.1); border-color: var(--escape-red); }
-
+        
+        .fate-card {
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid;
+        }
+        
+        .fate-card.elliptical {
+            background: rgba(46, 213, 115, 0.1);
+            border-color: var(--bound-green);
+        }
+        
+        .fate-card.parabolic {
+            background: rgba(255, 215, 61, 0.1);
+            border-color: var(--sun-gold);
+        }
+        
+        .fate-card.hyperbolic {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--escape-red);
+        }
+        
         .fate-title {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
-
+        
         .fate-card.elliptical .fate-title { color: var(--bound-green); }
         .fate-card.parabolic .fate-title { color: var(--sun-gold); }
         .fate-card.hyperbolic .fate-title { color: var(--escape-red); }
-
-        .fate-subtitle { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-primary); }
-        .fate-card p { font-size: 0.9rem; margin: 0; color: var(--text-muted); line-height: 1.6; }
-
-        .precision-list { list-style: none; padding: 0; margin: 1rem 0; }
-
+        
+        .fate-subtitle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .fate-card p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .precision-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
         .precision-list li {
             padding: 0.5rem 0 0.5rem 1.5rem;
             position: relative;
             color: var(--text-muted);
             line-height: 1.6;
         }
-
-        .precision-list li::before { content: '→'; position: absolute; left: 0; color: var(--sun-gold); }
-
+        
+        .precision-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--sun-gold);
+        }
+        
         .precision-list li strong {
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
         }
-
+        
         .credits {
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: 2rem;
             padding-top: 1.5rem;
         }
+        
+        .credits p {
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
-        .credits p { font-style: italic; max-width: 700px; margin: 0 auto; }
-
-        .trail-toggle { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+        .trail-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
 
         .toggle-switch {
             position: relative;
@@ -338,7 +430,9 @@
             transition: background 0.3s;
         }
 
-        .toggle-switch.active { background: var(--sun-gold); }
+        .toggle-switch.active {
+            background: var(--sun-gold);
+        }
 
         .toggle-switch::after {
             content: '';
@@ -352,9 +446,15 @@
             transition: transform 0.3s;
         }
 
-        .toggle-switch.active::after { transform: translateX(24px); }
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
 
-        .speed-indicator { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .speed-indicator {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
 
         .speed-dot {
             width: 8px;
@@ -364,7 +464,10 @@
             transition: background 0.3s;
         }
 
-        .speed-dot.active { background: var(--sun-gold); box-shadow: 0 0 8px var(--sun-gold); }
+        .speed-dot.active {
+            background: var(--sun-gold);
+            box-shadow: 0 0 8px var(--sun-gold);
+        }
 
         .light-delay-indicator {
             background: rgba(255, 200, 50, 0.1);
@@ -375,7 +478,10 @@
             animation: pulse 1.5s ease-in-out infinite;
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
 
         .delay-label {
             font-family: 'JetBrains Mono', monospace;
@@ -399,7 +505,12 @@
             box-shadow: 0 0 10px var(--sun-gold);
         }
 
-        .delay-note { font-size: 0.75rem; color: var(--text-muted); font-style: italic; margin-top: 0.5rem; }
+        .delay-note {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
 
         .graph-container {
             margin-top: 1rem;
@@ -418,18 +529,42 @@
             margin-bottom: 0.5rem;
         }
 
-        #graphCanvas { width: 100%; height: 120px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+        #graphCanvas {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
 
-        .graph-legend { display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.75rem; }
+        .graph-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
 
-        .legend-item { display: flex; align-items: center; gap: 0.3rem; color: var(--text-muted); }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-muted);
+        }
 
-        .legend-color { width: 12px; height: 3px; border-radius: 2px; }
-        .legend-color.velocity { background: var(--earth-blue); }
-        .legend-color.distance { background: var(--escape-red); }
+        .legend-color {
+            width: 12px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-color.velocity {
+            background: var(--earth-blue);
+        }
+
+        .legend-color.distance {
+            background: var(--escape-red);
+        }
     </style>
 </head>
-
 <body>
     <div class="container">
         <header>
@@ -480,18 +615,6 @@
 
                 <div class="stats-panel">
                     <div class="stat-row">
-                        <span class="stat-label">Time Compression</span>
-                        <span class="stat-value warp" id="warpStat">1×</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Perihelion</span>
-                        <span class="stat-value" id="periStat">1.00 AU</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Aphelion</span>
-                        <span class="stat-value" id="apoStat">1.00 AU</span>
-                    </div>
-                    <div class="stat-row">
                         <span class="stat-label">Orbital Velocity</span>
                         <span class="stat-value" id="velocityStat">29.78 km/s</span>
                     </div>
@@ -514,10 +637,12 @@
                     <div class="delay-bar">
                         <div class="delay-progress" id="delayProgress"></div>
                     </div>
-                    <div class="delay-note">Gravity has not reached Earth yet.</div>
+                    <div class="delay-note">Gravity hasn't reached Earth yet...</div>
                 </div>
 
-                <div class="orbit-status circular" id="orbitStatus">Stable Circular Orbit</div>
+                <div class="orbit-status circular" id="orbitStatus">
+                    Stable Circular Orbit
+                </div>
 
                 <div class="graph-container">
                     <div class="graph-title">Velocity & Distance Over Time</div>
@@ -533,75 +658,105 @@
         <div class="info-section">
             <h3>The Physics Behind the Simulation</h3>
             <p>
-                In a stable circular orbit, Earth's velocity is precisely balanced with the Sun's gravitational pull.
+                In a stable circular orbit, Earth's velocity is precisely balanced with the Sun's gravitational pull. 
                 The orbital velocity for a circular orbit is given by:
             </p>
             <div class="equation">v<sub>circular</sub> = √(GM/r)</div>
             <p>
-                The escape velocity, the minimum speed needed to break free from gravity, is:
+                The escape velocity—the minimum speed needed to break free from gravity—is:
             </p>
             <div class="equation">v<sub>escape</sub> = √(2GM/r) = √2 × v<sub>circular</sub></div>
             <p>
                 This √2 factor is the key to everything. Earth's circular orbit velocity is exactly 1/√2 ≈ 70.7% of escape velocity.
             </p>
-
+            
             <h3>The 50% Threshold</h3>
             <p>
                 When we suddenly remove mass from the Sun, Earth's velocity stays the same but the escape velocity changes:
             </p>
             <div class="equation">v<sub>escape,new</sub> = √(2G × M<sub>new</sub>/r)</div>
             <p>
-                At exactly <strong>50% solar mass</strong>, the new escape velocity becomes:
+                At exactly <strong>50% solar mass</strong>, something magical happens. The new escape velocity becomes:
             </p>
             <div class="equation">v<sub>escape,new</sub> = √(2G × 0.5M/r) = √(GM/r) = v<sub>circular</sub></div>
             <p>
-                Earth's existing velocity exactly equals the new escape velocity. This produces a <strong>parabolic trajectory</strong>, the boundary between bound and unbound orbits.
+                Earth's existing velocity <em>exactly equals</em> the new escape velocity! This produces a <strong>parabolic trajectory</strong>—the boundary between bound and unbound orbits.
             </p>
-
+            
             <h3>Three Possible Fates</h3>
             <div class="fate-cards">
                 <div class="fate-card elliptical">
                     <div class="fate-title">&gt; 50% Mass Remains</div>
                     <div class="fate-subtitle">Elliptical Orbit (Bound)</div>
-                    <p>Total energy E &lt; 0. Earth swings out to a distant aphelion but returns. The less mass removed, the larger the ellipse.</p>
+                    <p>Total energy E &lt; 0. Earth swings out to a distant aphelion but returns. The less mass removed, the smaller the ellipse.</p>
                 </div>
                 <div class="fate-card parabolic">
                     <div class="fate-title">= 50% Mass Remains</div>
                     <div class="fate-subtitle">Parabolic Escape (E = 0)</div>
-                    <p>Earth escapes to infinity, velocity approaching zero asymptotically. The mathematical knife edge between bound and unbound.</p>
+                    <p>Earth escapes to infinity, velocity approaching zero asymptotically. The mathematical knife-edge between bound and unbound.</p>
                 </div>
                 <div class="fate-card hyperbolic">
                     <div class="fate-title">&lt; 50% Mass Remains</div>
                     <div class="fate-subtitle">Hyperbolic Escape (Unbound)</div>
-                    <p>Total energy E &gt; 0. Earth escapes with residual velocity, it will still be moving even at infinite distance.</p>
+                    <p>Total energy E &gt; 0. Earth escapes with residual velocity—it will still be moving even at infinite distance.</p>
                 </div>
             </div>
-
+            
             <h3>The Numerical Precision Problem</h3>
             <p>
-                You might notice that 50% sometimes shows as Hyperbolic or Elliptical instead of Parabolic. This is a limitation of floating point arithmetic.
+                Here's where physics meets computer science. In this simulation, you might notice that 50% sometimes shows as 
+                "Hyperbolic" or "Elliptical" instead of "Parabolic." This isn't a bug—it's a fundamental limitation of 
+                floating-point arithmetic.
             </p>
             <p>
-                Computers represent numbers in binary with finite precision. When we calculate 50%, we might actually get
+                Computers represent numbers in binary with finite precision. When we calculate 50%, we might actually get 
                 50.00000000001% or 49.99999999999%. The difference between these is physically meaningful:
             </p>
             <ul class="precision-list">
-                <li><strong>50.00000000001%</strong> → E slightly positive → Hyperbolic</li>
-                <li><strong>50.00000000000%</strong> → E = 0 exactly → Parabolic</li>
-                <li><strong>49.99999999999%</strong> → E slightly negative → Elliptical</li>
+                <li><strong>50.00000000001%</strong> → E slightly positive → Hyperbolic (escapes with tiny residual velocity)</li>
+                <li><strong>50.00000000000%</strong> → E = 0 exactly → Parabolic (velocity → 0 at infinity)</li>
+                <li><strong>49.99999999999%</strong> → E slightly negative → Elliptical (returns after millions of years)</li>
             </ul>
-
-            <h3>Light Speed Gravity</h3>
             <p>
-                This simulation includes one more realistic detail: gravitational changes propagate at the speed of light, not instantaneously.
-                When the Sun's mass changes, Earth continues on its original orbit for about 8.3 minutes until the gravitational news arrives.
+                This is why real astrophysics simulations use <strong>double precision</strong> (64-bit) floating-point numbers, 
+                which provide about 16 significant digits. Even then, for problems sensitive to exact thresholds, 
+                mathematicians prefer pencil-and-paper solutions with symbolic math.
             </p>
+            <p>
+                The elegance of this problem is that the answer involves √2—an irrational number that <em>cannot</em> be 
+                represented exactly in any finite decimal or binary expansion. The 50% threshold is mathematically 
+                perfect but numerically unreachable.
+            </p>
+            
+            <h3>Light-Speed Gravity</h3>
+            <p>
+                This simulation includes one more realistic detail: gravitational changes propagate at the speed of light, 
+                not instantaneously. When the Sun's mass changes, Earth continues on its original orbit for ~8.3 minutes 
+                until the gravitational "news" arrives. This is consistent with General Relativity, where gravitational 
+                waves travel at <em>c</em>.
+            </p>
+            
+            <h3>Time to Escape</h3>
+            <p>
+                For the parabolic case (50% mass), the time to reach distance <em>r</em> from an initial circular orbit at <em>r₀</em> is:
+            </p>
+            <div class="equation">t = (1/3)√(4/GM₀) × (r<sup>3/2</sup> - r₀<sup>3/2</sup>)</div>
+            <p>
+                For Earth starting at 1 AU with half the Sun's mass remaining:
+            </p>
+            <ul class="precision-list">
+                <li>Reach 10 AU: ~2.5 years</li>
+                <li>Reach 100 AU: ~80 years</li>
+                <li>Reach 1000 AU: ~2,500 years</li>
+                <li>Reach infinity: ∞ (but velocity → 0)</li>
+            </ul>
         </div>
-
+        
         <div class="info-section credits">
             <p>
-                This simulation explores a classic orbital mechanics problem: what happens to a planet's orbit when its star suddenly loses mass?
-                The answer connects energy conservation, conic sections, and the practical limits of numerical computation.
+                This simulation was created to explore a classic orbital mechanics problem: what happens to a planet's 
+                orbit when its star suddenly loses mass? The answer reveals beautiful connections between energy conservation, 
+                the mathematics of conic sections, and the practical limits of numerical computation.
             </p>
         </div>
     </div>
@@ -609,23 +764,16 @@
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-
-        const speedSlider = document.getElementById('speedSlider');
-        const massSlider = document.getElementById('massSlider');
-
-        // High DPI support, fixed so scaling does not compound
+        
+        // High DPI support
         function resizeCanvas() {
             const rect = canvas.parentElement.getBoundingClientRect();
             const dpr = window.devicePixelRatio || 1;
-
-            canvas.width = Math.floor(rect.width * dpr);
-            canvas.height = Math.floor(rect.height * dpr);
-
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
             canvas.style.width = rect.width + 'px';
             canvas.style.height = rect.height + 'px';
-
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.scale(dpr, dpr);
         }
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
@@ -634,34 +782,18 @@
         const G = 1;
         const INITIAL_SUN_MASS = 1000;
         const INITIAL_ORBIT_RADIUS = 150;
-        const AU = INITIAL_ORBIT_RADIUS;
-
-        // Tuned time compression, goal: 50.1% orbit feels like a few seconds
-        const BASE_DT = 0.15;          // baseline integrator dt
-        const MAX_WARP = 8e10;         // cap
-        const MAX_SUBSTEPS = 60;       // cap per frame to keep browser alive
-
+        
         // State
         let sunMass = INITIAL_SUN_MASS;
+        let targetMass = INITIAL_SUN_MASS;
         let pendingMassChange = null;
         let massPercentage = 100;
-
         let showTrail = true;
-        let speedMultiplier = 1000; // user controlled base
-
+        let speedMultiplier = 1000;
         let trail = [];
         const MAX_TRAIL_LENGTH = 10000;
         const LIGHT_DELAY_FRAMES = 500;
-
-        // Orbit geometry (analytic markers)
-        let orbitGeom = {
-            valid: false,
-            ecc: 0,
-            a: Infinity,
-            rPeri: AU,
-            rApo: AU
-        };
-
+        
         // Graph data
         const graphData = {
             velocities: [],
@@ -671,7 +803,7 @@
         };
         const graphCanvas = document.getElementById('graphCanvas');
         const graphCtx = graphCanvas.getContext('2d');
-
+        
         // Camera state
         let camera = {
             zoom: 1,
@@ -680,7 +812,7 @@
             maxZoom: 1,
             padding: 80
         };
-
+        
         // Earth state
         let earth = {
             x: INITIAL_ORBIT_RADIUS,
@@ -688,10 +820,7 @@
             vx: 0,
             vy: Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)
         };
-
-        // Cached readouts
-        let lastWarpThisFrame = 1;
-
+        
         // Stars background
         const stars = [];
         for (let i = 0; i < 200; i++) {
@@ -702,38 +831,46 @@
                 brightness: Math.random() * 0.5 + 0.5
             });
         }
-
+        
         function updateCamera(width, height) {
             const earthDist = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
             const maxViewDist = Math.min(width, height) / 2 - camera.padding;
-            const neededZoom = maxViewDist / Math.max(earthDist, 1e-6);
+            const neededZoom = maxViewDist / earthDist;
             camera.targetZoom = Math.max(camera.minZoom, Math.min(camera.maxZoom, neededZoom));
-
-            if (camera.targetZoom < camera.zoom) camera.zoom = camera.targetZoom;
-            else camera.zoom += (camera.targetZoom - camera.zoom) * 0.1;
-        }
-
-        function worldToScreen(worldX, worldY, centerX, centerY) {
-            return { x: centerX + worldX * camera.zoom, y: centerY + worldY * camera.zoom };
-        }
-
-        function drawStars(width, height) {
-            for (const star of stars) {
-                ctx.beginPath();
-                ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.brightness * 0.4})`;
-                ctx.fill();
+            
+            if (camera.targetZoom < camera.zoom) {
+                camera.zoom = camera.targetZoom;
+            } else {
+                camera.zoom += (camera.targetZoom - camera.zoom) * 0.1;
             }
         }
-
+        
+        function worldToScreen(worldX, worldY, centerX, centerY) {
+            return {
+                x: centerX + worldX * camera.zoom,
+                y: centerY + worldY * camera.zoom
+            };
+        }
+        
+        function drawStars(width, height) {
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = rgba(255, 255, 255, ${star.brightness * 0.4});
+                ctx.fill();
+            });
+        }
+        
         function drawSun(centerX, centerY) {
+            // Sun size based on actual gravitational mass (so it disappears when mass is removed)
             const baseRadius = 30 * (sunMass / INITIAL_SUN_MASS);
             const radius = Math.max(baseRadius, sunMass > 50 ? 3 : 0) * camera.zoom;
             const minRadius = sunMass > 50 ? 4 : 0;
             const drawRadius = Math.max(radius, minRadius);
-
-            if (drawRadius <= 0) return;
-
+            
+            if (drawRadius <= 0) return; // Sun has vanished!
+            
+            // Outer glow
             const glowGradient = ctx.createRadialGradient(centerX, centerY, drawRadius * 0.5, centerX, centerY, drawRadius * 4);
             glowGradient.addColorStop(0, 'rgba(255, 200, 50, 0.3)');
             glowGradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.1)');
@@ -742,7 +879,8 @@
             ctx.arc(centerX, centerY, drawRadius * 4, 0, Math.PI * 2);
             ctx.fillStyle = glowGradient;
             ctx.fill();
-
+            
+            // Corona effect
             const coronaGradient = ctx.createRadialGradient(centerX, centerY, drawRadius * 0.8, centerX, centerY, drawRadius * 2);
             coronaGradient.addColorStop(0, 'rgba(255, 220, 100, 0.6)');
             coronaGradient.addColorStop(1, 'rgba(255, 140, 0, 0)');
@@ -750,7 +888,8 @@
             ctx.arc(centerX, centerY, drawRadius * 2, 0, Math.PI * 2);
             ctx.fillStyle = coronaGradient;
             ctx.fill();
-
+            
+            // Sun body
             const sunGradient = ctx.createRadialGradient(centerX - drawRadius * 0.3, centerY - drawRadius * 0.3, 0, centerX, centerY, drawRadius);
             sunGradient.addColorStop(0, '#fff8e7');
             sunGradient.addColorStop(0.3, '#ffd93d');
@@ -761,14 +900,15 @@
             ctx.fillStyle = sunGradient;
             ctx.fill();
         }
-
+        
         function drawEarth(centerX, centerY, earthX, earthY) {
             const pos = worldToScreen(earthX, earthY, centerX, centerY);
             const x = pos.x;
             const y = pos.y;
             const baseRadius = 8;
             const radius = Math.max(baseRadius * camera.zoom, 5);
-
+            
+            // Glow
             const glowGradient = ctx.createRadialGradient(x, y, radius * 0.5, x, y, radius * 2.5);
             glowGradient.addColorStop(0, 'rgba(74, 144, 217, 0.4)');
             glowGradient.addColorStop(1, 'rgba(74, 144, 217, 0)');
@@ -776,7 +916,8 @@
             ctx.arc(x, y, radius * 2.5, 0, Math.PI * 2);
             ctx.fillStyle = glowGradient;
             ctx.fill();
-
+            
+            // Earth body
             const earthGradient = ctx.createRadialGradient(x - radius * 0.3, y - radius * 0.3, 0, x, y, radius);
             earthGradient.addColorStop(0, '#6bb3f0');
             earthGradient.addColorStop(0.5, '#4a90d9');
@@ -787,28 +928,29 @@
             ctx.fillStyle = earthGradient;
             ctx.fill();
         }
-
+        
         function drawTrail(centerX, centerY) {
             if (!showTrail || trail.length < 2) return;
-
+            
             ctx.beginPath();
             const firstPos = worldToScreen(trail[0].x, trail[0].y, centerX, centerY);
             ctx.moveTo(firstPos.x, firstPos.y);
-
+            
             for (let i = 1; i < trail.length; i++) {
                 const pos = worldToScreen(trail[i].x, trail[i].y, centerX, centerY);
                 ctx.lineTo(pos.x, pos.y);
             }
-
+            
             ctx.strokeStyle = 'rgba(74, 144, 217, 0.6)';
             ctx.lineWidth = Math.max(2 * camera.zoom, 1.5);
             ctx.stroke();
         }
-
-        function drawInitialOrbit(centerX, centerY) {
+        
+        function drawInitialOrbit(centerX, centerY, width, height) {
             const orbitRadius = INITIAL_ORBIT_RADIUS * camera.zoom;
+            // Only draw if it's visible (at least 2px)
             if (orbitRadius < 2) return;
-
+            
             ctx.beginPath();
             ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
@@ -817,52 +959,23 @@
             ctx.stroke();
             ctx.setLineDash([]);
         }
-
-        function drawOrbitMarkers(centerX, centerY) {
-            if (!orbitGeom.valid) return;
-
-            ctx.save();
-            ctx.setLineDash([6, 8]);
-            ctx.lineWidth = 1.5;
-
-            const rPeri = orbitGeom.rPeri * camera.zoom;
-            if (rPeri >= 2) {
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, rPeri, 0, Math.PI * 2);
-                ctx.strokeStyle = 'rgba(46, 213, 115, 0.50)';
-                ctx.stroke();
-            }
-
-            if (isFinite(orbitGeom.rApo)) {
-                const rApo = orbitGeom.rApo * camera.zoom;
-                if (rApo >= 2) {
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, rApo, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(255, 71, 87, 0.45)';
-                    ctx.stroke();
-                }
-            }
-
-            ctx.setLineDash([]);
-            ctx.restore();
-        }
-
+        
         function drawZoomIndicator(width, height) {
             const zoomPercent = Math.round(camera.zoom * 100);
-            const distanceAU = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / AU;
-
+            const distanceAU = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / INITIAL_ORBIT_RADIUS;
+            
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.font = '12px "JetBrains Mono", monospace';
             ctx.textAlign = 'left';
-            ctx.fillText(`Zoom: ${zoomPercent}%`, 15, height - 35);
-            ctx.fillText(`Distance: ${distanceAU.toFixed(1)} AU`, 15, height - 15);
+            ctx.fillText(Zoom: ${zoomPercent}%, 15, height - 35);
+            ctx.fillText(Distance: ${distanceAU.toFixed(1)} AU, 15, height - 15);
         }
-
+        
         function updateLightDelayUI() {
             const indicator = document.getElementById('lightDelayIndicator');
             const progress = document.getElementById('delayProgress');
             const timeDisplay = document.getElementById('delayTime');
-
+            
             if (pendingMassChange) {
                 indicator.style.display = 'block';
                 const progressPercent = ((LIGHT_DELAY_FRAMES - pendingMassChange.delayRemaining) / LIGHT_DELAY_FRAMES) * 100;
@@ -873,21 +986,23 @@
                 indicator.style.display = 'none';
             }
         }
-
+        
         function drawGraph() {
             const width = graphCanvas.width;
             const height = graphCanvas.height;
-
+            
             graphCtx.clearRect(0, 0, width, height);
+            
             if (graphData.velocities.length < 2) return;
-
+            
             const maxVel = Math.max(...graphData.velocities, 1);
             const maxDist = Math.max(...graphData.distances, 1);
-
+            
             const padding = 5;
             const graphWidth = width - padding * 2;
             const graphHeight = height - padding * 2;
-
+            
+            // Draw velocity line (blue)
             graphCtx.beginPath();
             graphCtx.strokeStyle = '#4a90d9';
             graphCtx.lineWidth = 2;
@@ -898,7 +1013,8 @@
                 else graphCtx.lineTo(x, y);
             }
             graphCtx.stroke();
-
+            
+            // Draw distance line (red)
             graphCtx.beginPath();
             graphCtx.strokeStyle = '#ff4757';
             graphCtx.lineWidth = 2;
@@ -909,199 +1025,122 @@
                 else graphCtx.lineTo(x, y);
             }
             graphCtx.stroke();
-
+            
             graphCtx.fillStyle = '#4a90d9';
             graphCtx.font = '10px "JetBrains Mono", monospace';
             graphCtx.textAlign = 'right';
             const currentVel = graphData.velocities[graphData.velocities.length - 1] || 0;
             const currentDist = graphData.distances[graphData.distances.length - 1] || 0;
-
-            graphCtx.fillText(`v: ${(currentVel * 29.78 / 2.58).toFixed(1)} km/s`, width - 5, 15);
+            graphCtx.fillText(v: ${(currentVel * 29.78 / 2.58).toFixed(1)} km/s, width - 5, 15);
             graphCtx.fillStyle = '#ff4757';
-            graphCtx.fillText(`d: ${currentDist.toFixed(1)} AU`, width - 5, 28);
+            graphCtx.fillText(d: ${currentDist.toFixed(1)} AU, width - 5, 28);
         }
-
+        
         function recordGraphData() {
             if (!graphData.recording) return;
-
+            
             const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
-            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / AU;
-
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / INITIAL_ORBIT_RADIUS;
+            
             graphData.velocities.push(v);
             graphData.distances.push(r);
-
+            
             if (graphData.velocities.length > graphData.maxPoints) {
                 graphData.velocities.shift();
                 graphData.distances.shift();
             }
         }
-
-        function calculateEnergy(massForEnergy = sunMass) {
-            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
-            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
-            const kinetic = 0.5 * v * v;
-            const potential = -G * massForEnergy / r;
-            return kinetic + potential;
-        }
-
-        function computeOrbitGeometry() {
-            const mu = G * sunMass;
-
-            const rx = earth.x;
-            const ry = earth.y;
-            const vx = earth.vx;
-            const vy = earth.vy;
-
-            const r = Math.sqrt(rx * rx + ry * ry);
-            const v2 = vx * vx + vy * vy;
-
-            const energy = 0.5 * v2 - mu / r;
-            const h = rx * vy - ry * vx;
-
-            const eccSq = 1 + (2 * energy * h * h) / (mu * mu);
-            const ecc = Math.sqrt(Math.max(eccSq, 0));
-
-            orbitGeom.ecc = ecc;
-
-            if (energy < 0) {
-                const a = -mu / (2 * energy);
-                orbitGeom.a = a;
-                orbitGeom.rPeri = a * (1 - ecc);
-                orbitGeom.rApo = a * (1 + ecc);
-                orbitGeom.valid = true;
-            } else {
-                orbitGeom.a = Infinity;
-                orbitGeom.rPeri = (h * h) / mu;
-                orbitGeom.rApo = Infinity;
-                orbitGeom.valid = true;
+        
+        function updatePhysics(dt) {
+            if (pendingMassChange) {
+                pendingMassChange.delayRemaining -= 1;
+                if (pendingMassChange.delayRemaining <= 0) {
+                    sunMass = pendingMassChange.newMass;
+                    pendingMassChange = null;
+                    graphData.recording = true;
+                }
             }
-        }
-
-        function getOrbitType() {
-            const energy = calculateEnergy();
-            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
-            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
-
-            const tolerance = 0.01 * Math.max(Math.abs(0.5 * v * v), Math.abs(G * sunMass / r), 0.01);
-
-            if (Math.abs(sunMass - INITIAL_SUN_MASS) < 1) return 'circular';
-            if (Math.abs(energy) < tolerance) return 'parabolic';
-            if (energy < 0) return 'elliptical';
-            return 'hyperbolic';
-        }
-
-        function formatWarp(w) {
-            if (!isFinite(w)) return '∞';
-            if (w < 1e3) return `${w.toFixed(1)}×`;
-            if (w < 1e6) return `${(w / 1e3).toFixed(1)}k×`;
-            if (w < 1e9) return `${(w / 1e6).toFixed(1)}M×`;
-            if (w < 1e12) return `${(w / 1e9).toFixed(1)}B×`;
-            return `${(w / 1e12).toFixed(1)}T×`;
-        }
-
-        function computeAdaptiveWarp(r, vMag) {
-            const rAU = r / AU;
-
-            // Base speed from slider
-            const base = speedMultiplier;
-
-            // Distance boost, tuned so 50.1% completes a full orbit in a few seconds
-            const distanceBoost = 1 + 0.5 * Math.pow(rAU, 3);
-
-            // Near 50% boost
-            const frac = sunMass / INITIAL_SUN_MASS;
-            const d = frac - 0.5;
-            const nearHalf = 1 + Math.min(2000, 0.002 / (d * d + 1e-6));
-
-            // Safety if v is tiny: still allow huge warp, but do not go infinite
-            const vSafe = Math.max(vMag, 1e-6);
-
-            // Combine and cap
-            let warp = base * distanceBoost * nearHalf;
-
-            // Optional soft cap based on local timescale to reduce integration blowups
-            // dtCap is a fraction of r / v so the step does not jump too far
-            const dtWanted = BASE_DT * warp;
-            const dtCap = 0.15 * (r / vSafe);
-            const dtEffective = Math.min(dtWanted, dtCap);
-
-            // Convert back to an effective warp we actually used
-            const warpEffective = dtEffective / BASE_DT;
-
-            return Math.min(warpEffective, MAX_WARP);
-        }
-
-        // Symplectic integrator (velocity Verlet)
-        function stepPhysics(dt) {
-            const rx = earth.x;
-            const ry = earth.y;
-
-            const r = Math.sqrt(rx * rx + ry * ry);
-            if (r <= 5) return;
-
-            const mu = G * sunMass;
-
-            const ax0 = -mu * rx / (r * r * r);
-            const ay0 = -mu * ry / (r * r * r);
-
-            earth.vx += 0.5 * ax0 * dt;
-            earth.vy += 0.5 * ay0 * dt;
-
-            earth.x += earth.vx * dt;
-            earth.y += earth.vy * dt;
-
-            const rx1 = earth.x;
-            const ry1 = earth.y;
-            const r1 = Math.sqrt(rx1 * rx1 + ry1 * ry1);
-            if (r1 <= 5) return;
-
-            const ax1 = -mu * rx1 / (r1 * r1 * r1);
-            const ay1 = -mu * ry1 / (r1 * r1 * r1);
-
-            earth.vx += 0.5 * ax1 * dt;
-            earth.vy += 0.5 * ay1 * dt;
-
-            // Trail based on distance travelled
-            if (showTrail) {
-                const last = trail.length ? trail[trail.length - 1] : null;
-                const minTrailDistance = 2;
-
-                if (!last) {
-                    trail.push({ x: earth.x, y: earth.y });
-                } else {
-                    const dx = earth.x - last.x;
-                    const dy = earth.y - last.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist >= minTrailDistance) {
+            
+            const dx = -earth.x;
+            const dy = -earth.y;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            
+            if (r > 5) {
+                const F = G * sunMass / (r * r);
+                const ax = F * dx / r;
+                const ay = F * dy / r;
+                
+                const oldX = earth.x;
+                const oldY = earth.y;
+                
+                earth.vx += ax * dt;
+                earth.vy += ay * dt;
+                earth.x += earth.vx * dt;
+                earth.y += earth.vy * dt;
+                
+                // Record trail based on distance traveled, not time
+                if (showTrail) {
+                    const lastTrailPoint = trail.length > 0 ? trail[trail.length - 1] : null;
+                    const minTrailDistance = 2; // minimum distance between trail points
+                    
+                    if (!lastTrailPoint) {
                         trail.push({ x: earth.x, y: earth.y });
-                        if (trail.length > MAX_TRAIL_LENGTH) trail.shift();
+                    } else {
+                        const distFromLast = Math.sqrt(
+                            (earth.x - lastTrailPoint.x) ** 2 + 
+                            (earth.y - lastTrailPoint.y) ** 2
+                        );
+                        if (distFromLast >= minTrailDistance) {
+                            trail.push({ x: earth.x, y: earth.y });
+                            if (trail.length > MAX_TRAIL_LENGTH) {
+                                trail.shift();
+                            }
+                        }
                     }
                 }
             }
         }
-
+        
+        function calculateEnergy() {
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            const kinetic = 0.5 * v * v;
+            const potential = -G * sunMass / r;
+            return kinetic + potential;
+        }
+        
+        function getOrbitType() {
+            const energy = calculateEnergy();
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            // Scale tolerance based on current energy magnitude for better detection
+            const tolerance = 0.01 * Math.max(Math.abs(0.5 * v * v), Math.abs(G * sunMass / r), 0.01);
+            
+            if (Math.abs(sunMass - INITIAL_SUN_MASS) < 1) {
+                return 'circular';
+            } else if (Math.abs(energy) < tolerance) {
+                return 'parabolic';
+            } else if (energy < 0) {
+                return 'elliptical';
+            } else {
+                return 'hyperbolic';
+            }
+        }
+        
         function updateStats() {
             const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
             const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
             const escapeV = Math.sqrt(2 * G * sunMass / r);
             const energy = calculateEnergy();
-
+            
             const realV = (v / Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)) * 29.78;
             const realEscapeV = (escapeV / Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)) * 29.78 * Math.sqrt(2);
-            const realDistance = r / AU;
-
+            const realDistance = r / INITIAL_ORBIT_RADIUS;
+            
             document.getElementById('velocityStat').textContent = realV.toFixed(2) + ' km/s';
             document.getElementById('escapeStat').textContent = realEscapeV.toFixed(2) + ' km/s';
             document.getElementById('distanceStat').textContent = realDistance.toFixed(2) + ' AU';
-
-            document.getElementById('warpStat').textContent = formatWarp(lastWarpThisFrame);
-
-            const periAU = orbitGeom.valid ? (orbitGeom.rPeri / AU) : 1;
-            const apoAU = orbitGeom.valid ? (orbitGeom.rApo / AU) : 1;
-
-            document.getElementById('periStat').textContent = periAU.toFixed(2) + ' AU';
-            document.getElementById('apoStat').textContent = isFinite(apoAU) ? (apoAU.toFixed(2) + ' AU') : '∞';
-
+            
             const energyEl = document.getElementById('energyStat');
             if (Math.abs(energy) < 0.001) {
                 energyEl.textContent = '≈ 0 J/kg';
@@ -1113,11 +1152,11 @@
                 energyEl.textContent = '> 0 (unbound)';
                 energyEl.className = 'stat-value escape';
             }
-
+            
             const orbitType = getOrbitType();
             const statusEl = document.getElementById('orbitStatus');
             statusEl.className = 'orbit-status ' + orbitType;
-
+            
             const statusTexts = {
                 circular: 'Stable Circular Orbit',
                 elliptical: 'Bound Elliptical Orbit',
@@ -1126,143 +1165,98 @@
             };
             statusEl.textContent = statusTexts[orbitType];
         }
-
+        
         function animate() {
             const rect = canvas.parentElement.getBoundingClientRect();
             const width = rect.width;
             const height = rect.height;
             const centerX = width / 2;
             const centerY = height / 2;
-
+            
             ctx.clearRect(0, 0, width, height);
-
+            
             updateCamera(width, height);
-
+            
             drawStars(width, height);
-            drawInitialOrbit(centerX, centerY);
-
-            // Apply light delay
-            if (pendingMassChange) {
-                pendingMassChange.delayRemaining -= 1;
-                if (pendingMassChange.delayRemaining <= 0) {
-                    sunMass = pendingMassChange.newMass;
-                    pendingMassChange = null;
-                    graphData.recording = true;
-                    computeOrbitGeometry();
-                }
+            drawInitialOrbit(centerX, centerY, width, height);
+            
+            for (let i = 0; i < speedMultiplier; i++) {
+                updatePhysics(0.15);
             }
-
-            // Physics stepping with adaptive warp
-            const steps = speedMultiplier;
-            let warpForUI = 1;
-
-            for (let i = 0; i < steps; i++) {
-                const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
-                const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
-
-                const warp = computeAdaptiveWarp(r, v);
-                warpForUI = warp;
-
-                // Convert warp into dt, then allow a few substates if needed
-                const dtWanted = BASE_DT * warp;
-                const dtCap = 0.15 * (r / Math.max(v, 1e-6));
-                const subSteps = Math.max(1, Math.min(MAX_SUBSTEPS, Math.ceil(dtWanted / dtCap)));
-                const dtUse = dtWanted / subSteps;
-
-                for (let j = 0; j < subSteps; j++) stepPhysics(dtUse);
-            }
-
-            lastWarpThisFrame = warpForUI;
-
+            
             drawTrail(centerX, centerY);
-            drawOrbitMarkers(centerX, centerY);
             drawSun(centerX, centerY);
             drawEarth(centerX, centerY, earth.x, earth.y);
-
+            
             drawZoomIndicator(width, height);
-
+            
             updateLightDelayUI();
             recordGraphData();
             drawGraph();
             updateStats();
-
+            
             requestAnimationFrame(animate);
         }
-
+        
         function resetSimulation() {
             sunMass = INITIAL_SUN_MASS;
+            targetMass = INITIAL_SUN_MASS;
             pendingMassChange = null;
             massPercentage = 100;
-
             camera.zoom = 1;
             camera.targetZoom = 1;
-
             graphData.velocities = [];
             graphData.distances = [];
             graphData.recording = false;
-
             earth = {
                 x: INITIAL_ORBIT_RADIUS,
                 y: 0,
                 vx: 0,
                 vy: Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)
             };
-
             trail = [];
-            orbitGeom = { valid: false, ecc: 0, a: Infinity, rPeri: AU, rApo: AU };
-
             document.getElementById('massSlider').value = 100;
             document.getElementById('massValue').textContent = '100%';
             document.getElementById('lightDelayIndicator').style.display = 'none';
-
             graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
-            lastWarpThisFrame = 1;
-
             updateStats();
         }
-
+        
         // Event listeners
         document.getElementById('massSlider').addEventListener('input', (e) => {
             massPercentage = parseFloat(e.target.value);
-            document.getElementById('massValue').textContent = massPercentage.toFixed(1) + '%';
+            document.getElementById('massValue').textContent = massPercentage + '%';
         });
-
+        
         document.getElementById('applyMass').addEventListener('click', () => {
             trail = [];
-            graphData.velocities = [];
-            graphData.distances = [];
-            graphData.recording = false;
-
-            orbitGeom.valid = false;
-
             const newMass = INITIAL_SUN_MASS * (massPercentage / 100);
-
             pendingMassChange = {
                 newMass: newMass,
                 delayRemaining: LIGHT_DELAY_FRAMES
             };
+            targetMass = newMass;
         });
-
+        
         document.getElementById('speedSlider').addEventListener('input', (e) => {
             const speeds = [1, 5, 20, 50, 100, 500, 1000];
-            const speedIndex = parseInt(e.target.value, 10) - 1;
-
+            const speedIndex = parseInt(e.target.value) - 1;
             speedMultiplier = speeds[speedIndex];
             document.getElementById('speedValue').textContent = speeds[speedIndex] + '×';
-
+            
             document.querySelectorAll('.speed-dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i <= speedIndex);
             });
         });
-
+        
         document.getElementById('trailToggle').addEventListener('click', (e) => {
             showTrail = !showTrail;
             e.target.classList.toggle('active', showTrail);
             if (!showTrail) trail = [];
         });
-
+        
         document.getElementById('resetBtn').addEventListener('click', resetSimulation);
-
+        
         // Start
         updateStats();
         animate();
