@@ -511,58 +511,6 @@
             font-style: italic;
             margin-top: 0.5rem;
         }
-
-        .graph-container {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .graph-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.5rem;
-        }
-
-        #graphCanvas {
-            width: 100%;
-            height: 120px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-        }
-
-        .graph-legend {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            color: var(--text-muted);
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 3px;
-            border-radius: 2px;
-        }
-
-        .legend-color.velocity {
-            background: var(--earth-blue);
-        }
-
-        .legend-color.distance {
-            background: var(--escape-red);
-        }
     </style>
 </head>
 <body>
@@ -645,15 +593,6 @@
 
                 <div class="orbit-status circular" id="orbitStatus">
                     Stable Circular Orbit
-                </div>
-
-                <div class="graph-container">
-                    <div class="graph-title">Velocity & Distance Over Time</div>
-                    <canvas id="graphCanvas" width="280" height="120"></canvas>
-                    <div class="graph-legend">
-                        <span class="legend-item"><span class="legend-color velocity"></span>Velocity</span>
-                        <span class="legend-item"><span class="legend-color distance"></span>Distance</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -797,16 +736,6 @@
         const MAX_TRAIL_LENGTH = 10000;
         const LIGHT_DELAY_FRAMES = 500;
 
-        // Graph data
-        const graphData = {
-            velocities: [],
-            distances: [],
-            maxPoints: 200,
-            recording: false
-        };
-        const graphCanvas = document.getElementById('graphCanvas');
-        const graphCtx = graphCanvas.getContext('2d');
-
         // Camera state
         let camera = {
             zoom: 1,
@@ -865,11 +794,13 @@
         }
 
         function drawSun(centerX, centerY) {
-            // Sun size based on actual gravitational mass and camera zoom (shrinks as Earth moves away)
-            const baseRadius = 30 * (sunMass / INITIAL_SUN_MASS);
-            const drawRadius = baseRadius * camera.zoom;
+            // Sun size based on distance from Earth (perspective) and camera zoom
+            const distanceFromEarth = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const distanceScale = INITIAL_ORBIT_RADIUS / distanceFromEarth;
+            const baseRadius = 80 * (sunMass / INITIAL_SUN_MASS) * distanceScale;
+            const drawRadius = Math.max(baseRadius * camera.zoom, 1.5);
 
-            if (drawRadius <= 0.5) return; // Sun has vanished or too small to see!
+            if (sunMass < 50 || drawRadius <= 0.5) return; // Sun has vanished or too small to see!
 
             // Outer glow
             const glowGradient = ctx.createRadialGradient(centerX, centerY, drawRadius * 0.5, centerX, centerY, drawRadius * 4);
@@ -988,69 +919,6 @@
             }
         }
 
-        function drawGraph() {
-            const width = graphCanvas.width;
-            const height = graphCanvas.height;
-
-            graphCtx.clearRect(0, 0, width, height);
-
-            if (graphData.velocities.length < 2) return;
-
-            const maxVel = Math.max(...graphData.velocities, 1);
-            const maxDist = Math.max(...graphData.distances, 1);
-
-            const padding = 5;
-            const graphWidth = width - padding * 2;
-            const graphHeight = height - padding * 2;
-
-            // Draw velocity line (blue)
-            graphCtx.beginPath();
-            graphCtx.strokeStyle = '#4a90d9';
-            graphCtx.lineWidth = 2;
-            for (let i = 0; i < graphData.velocities.length; i++) {
-                const x = padding + (i / graphData.maxPoints) * graphWidth;
-                const y = height - padding - (graphData.velocities[i] / maxVel) * graphHeight;
-                if (i === 0) graphCtx.moveTo(x, y);
-                else graphCtx.lineTo(x, y);
-            }
-            graphCtx.stroke();
-
-            // Draw distance line (red)
-            graphCtx.beginPath();
-            graphCtx.strokeStyle = '#ff4757';
-            graphCtx.lineWidth = 2;
-            for (let i = 0; i < graphData.distances.length; i++) {
-                const x = padding + (i / graphData.maxPoints) * graphWidth;
-                const y = height - padding - (graphData.distances[i] / maxDist) * graphHeight;
-                if (i === 0) graphCtx.moveTo(x, y);
-                else graphCtx.lineTo(x, y);
-            }
-            graphCtx.stroke();
-
-            graphCtx.fillStyle = '#4a90d9';
-            graphCtx.font = '10px "JetBrains Mono", monospace';
-            graphCtx.textAlign = 'right';
-            const currentVel = graphData.velocities[graphData.velocities.length - 1] || 0;
-            const currentDist = graphData.distances[graphData.distances.length - 1] || 0;
-            graphCtx.fillText(`v: ${(currentVel * 29.78 / 2.58).toFixed(1)} km/s`, width - 5, 15);
-            graphCtx.fillStyle = '#ff4757';
-            graphCtx.fillText(`d: ${currentDist.toFixed(1)} AU`, width - 5, 28);
-        }
-
-        function recordGraphData() {
-            if (!graphData.recording) return;
-
-            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
-            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / INITIAL_ORBIT_RADIUS;
-
-            graphData.velocities.push(v);
-            graphData.distances.push(r);
-
-            if (graphData.velocities.length > graphData.maxPoints) {
-                graphData.velocities.shift();
-                graphData.distances.shift();
-            }
-        }
 
         function updatePhysics(dt) {
             if (pendingMassChange) {
@@ -1058,7 +926,6 @@
                 if (pendingMassChange.delayRemaining <= 0) {
                     sunMass = pendingMassChange.newMass;
                     pendingMassChange = null;
-                    graphData.recording = true;
                 }
             }
 
@@ -1202,8 +1069,6 @@
             drawZoomIndicator(width, height);
 
             updateLightDelayUI();
-            recordGraphData();
-            drawGraph();
             updateStats();
 
             requestAnimationFrame(animate);
@@ -1216,9 +1081,6 @@
             massPercentage = 100;
             camera.zoom = 1;
             camera.targetZoom = 1;
-            graphData.velocities = [];
-            graphData.distances = [];
-            graphData.recording = false;
             earth = {
                 x: INITIAL_ORBIT_RADIUS,
                 y: 0,
@@ -1229,7 +1091,6 @@
             document.getElementById('massSlider').value = 100;
             document.getElementById('massValue').textContent = '100%';
             document.getElementById('lightDelayIndicator').style.display = 'none';
-            graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
             updateStats();
         }
 
