@@ -1124,7 +1124,7 @@
             // Special handling for 50% mass case - should always be parabolic
             // Check mass percentage to override energy-based detection (avoids floating-point issues)
             const currentMassPercent = (sunMass / INITIAL_SUN_MASS) * 100;
-            if (Math.abs(currentMassPercent - 50) < 0.5) {
+            if (Math.abs(currentMassPercent - 50) < 0.05) {
                 return 'parabolic';
             }
 
