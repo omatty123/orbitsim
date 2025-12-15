@@ -17,7 +17,7 @@
 <meta name="twitter:title" content="Orbital Mechanics: The Vanishing Sun">
 <meta name="twitter:description" content="What happens to Earth's orbit if half the Sun's mass suddenly disappears?">
 <meta name="twitter:image" content="https://omatty123.github.io/orbitsim/vanishingsun.png">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
@@ -298,7 +298,7 @@
             margin-top: 1.5rem;
             color: var(--sun-gold);
         }
-        
+
         .info-section h3:first-child {
             margin-top: 0;
         }
@@ -320,93 +320,93 @@
             font-size: 0.9rem;
             overflow-x: auto;
         }
-        
+
         .fate-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
             margin: 1.5rem 0;
         }
-        
+
         .fate-card {
             padding: 1.25rem;
             border-radius: 10px;
             border: 1px solid;
         }
-        
+
         .fate-card.elliptical {
             background: rgba(46, 213, 115, 0.1);
             border-color: var(--bound-green);
         }
-        
+
         .fate-card.parabolic {
             background: rgba(255, 215, 61, 0.1);
             border-color: var(--sun-gold);
         }
-        
+
         .fate-card.hyperbolic {
             background: rgba(255, 71, 87, 0.1);
             border-color: var(--escape-red);
         }
-        
+
         .fate-title {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
-        
+
         .fate-card.elliptical .fate-title { color: var(--bound-green); }
         .fate-card.parabolic .fate-title { color: var(--sun-gold); }
         .fate-card.hyperbolic .fate-title { color: var(--escape-red); }
-        
+
         .fate-subtitle {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
             color: var(--text-primary);
         }
-        
+
         .fate-card p {
             font-size: 0.9rem;
             margin: 0;
             color: var(--text-muted);
             line-height: 1.6;
         }
-        
+
         .precision-list {
             list-style: none;
             padding: 0;
             margin: 1rem 0;
         }
-        
+
         .precision-list li {
             padding: 0.5rem 0 0.5rem 1.5rem;
             position: relative;
             color: var(--text-muted);
             line-height: 1.6;
         }
-        
+
         .precision-list li::before {
             content: '→';
             position: absolute;
             left: 0;
             color: var(--sun-gold);
         }
-        
+
         .precision-list li strong {
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
         }
-        
+
         .credits {
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: 2rem;
             padding-top: 1.5rem;
         }
-        
+
         .credits p {
             font-style: italic;
             max-width: 700px;
@@ -583,6 +583,7 @@
                 <div class="control-group">
                     <label class="control-label">Remaining Solar Mass</label>
                     <div class="slider-container">
+                        <input type="range" id="massSlider" min="10" max="100" value="100">
                         <input type="range" id="massSlider" min="10" max="100" step="0.1" value="100">
                         <span class="slider-value" id="massValue">100%</span>
                     </div>
@@ -669,7 +670,7 @@
             <p>
                 This √2 factor is the key to everything. Earth's circular orbit velocity is exactly 1/√2 ≈ 70.7% of escape velocity.
             </p>
-            
+
             <h3>The 50% Threshold</h3>
             <p>
                 When we suddenly remove mass from the Sun, Earth's velocity stays the same but the escape velocity changes:
@@ -682,7 +683,7 @@
             <p>
                 Earth's existing velocity <em>exactly equals</em> the new escape velocity! This produces a <strong>parabolic trajectory</strong>—the boundary between bound and unbound orbits.
             </p>
-            
+
             <h3>Three Possible Fates</h3>
             <div class="fate-cards">
                 <div class="fate-card elliptical">
@@ -701,7 +702,7 @@
                     <p>Total energy E &gt; 0. Earth escapes with residual velocity—it will still be moving even at infinite distance.</p>
                 </div>
             </div>
-            
+
             <h3>The Numerical Precision Problem</h3>
             <p>
                 Here's where physics meets computer science. In this simulation, you might notice that 50% sometimes shows as 
@@ -727,7 +728,7 @@
                 represented exactly in any finite decimal or binary expansion. The 50% threshold is mathematically 
                 perfect but numerically unreachable.
             </p>
-            
+
             <h3>Light-Speed Gravity</h3>
             <p>
                 This simulation includes one more realistic detail: gravitational changes propagate at the speed of light, 
@@ -735,7 +736,7 @@
                 until the gravitational "news" arrives. This is consistent with General Relativity, where gravitational 
                 waves travel at <em>c</em>.
             </p>
-            
+
             <h3>Time to Escape</h3>
             <p>
                 For the parabolic case (50% mass), the time to reach distance <em>r</em> from an initial circular orbit at <em>r₀</em> is:
@@ -751,7 +752,7 @@
                 <li>Reach infinity: ∞ (but velocity → 0)</li>
             </ul>
         </div>
-        
+
         <div class="info-section credits">
             <p>
                 This simulation was created to explore a classic orbital mechanics problem: what happens to a planet's 
@@ -761,201 +762,506 @@
         </div>
     </div>
 
-   <script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
 
-// ---------- DPI SAFE RESIZE ----------
-function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-// ---------- CONSTANTS ----------
-const G = 1;
-const INITIAL_SUN_MASS = 1000;
-const INITIAL_ORBIT_RADIUS = 150;
-const LIGHT_DELAY_FRAMES = 500;
-const MAX_TRAIL_LENGTH = 10000;
-
-// ---------- STATE ----------
-let sunMass = INITIAL_SUN_MASS;
-let pendingMassChange = null;
-let massPercentage = 100;
-let showTrail = true;
-let speedMultiplier = 1000;
-let trail = [];
-
-// ---------- GRAPH ----------
-const graphCanvas = document.getElementById('graphCanvas');
-const graphCtx = graphCanvas.getContext('2d');
-
-const graphData = {
-    velocities: [],
-    distances: [],
-    maxPoints: 200,
-    recording: false
-};
-
-// ---------- CAMERA ----------
-const camera = {
-    zoom: 1,
-    targetZoom: 1,
-    minZoom: 0.0001,
-    maxZoom: 1,
-    padding: 80
-};
-
-// ---------- EARTH ----------
-let earth = {
-    x: INITIAL_ORBIT_RADIUS,
-    y: 0,
-    vx: 0,
-    vy: Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)
-};
-
-// ---------- STARS ----------
-const stars = Array.from({ length: 200 }, () => ({
-    x: Math.random(),
-    y: Math.random(),
-    size: Math.random() * 1.5 + 0.5,
-    brightness: Math.random() * 0.5 + 0.5
-}));
-
-function worldToScreen(x, y, cx, cy) {
-    return {
-        x: cx + x * camera.zoom,
-        y: cy + y * camera.zoom
-    };
-}
-
-function updateCamera(w, h) {
-    const dist = Math.hypot(earth.x, earth.y);
-    const maxView = Math.min(w, h) / 2 - camera.padding;
-    camera.targetZoom = Math.max(
-        camera.minZoom,
-        Math.min(camera.maxZoom, maxView / dist)
-    );
-    camera.zoom += (camera.targetZoom - camera.zoom) * 0.1;
-}
-
-// ---------- DRAW ----------
-function drawStars(w, h) {
-    for (const s of stars) {
-        ctx.fillStyle = `rgba(255,255,255,${s.brightness * 0.4})`;
-        ctx.beginPath();
-        ctx.arc(s.x * w, s.y * h, s.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-function drawSun(cx, cy) {
-    const base = 30 * (sunMass / INITIAL_SUN_MASS);
-    const r = Math.max(base, sunMass > 50 ? 4 : 0) * camera.zoom;
-    if (r <= 0) return;
-
-    const g = ctx.createRadialGradient(cx, cy, r * 0.3, cx, cy, r * 3);
-    g.addColorStop(0, 'rgba(255,220,100,0.6)');
-    g.addColorStop(1, 'rgba(255,140,0,0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#ffd93d';
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-function drawEarth(cx, cy) {
-    const p = worldToScreen(earth.x, earth.y, cx, cy);
-    const r = Math.max(8 * camera.zoom, 5);
-    ctx.fillStyle = '#4a90d9';
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-function drawTrail(cx, cy) {
-    if (!showTrail || trail.length < 2) return;
-    ctx.strokeStyle = 'rgba(74,144,217,0.6)';
-    ctx.lineWidth = Math.max(1.5, 2 * camera.zoom);
-    ctx.beginPath();
-    trail.forEach((pt, i) => {
-        const p = worldToScreen(pt.x, pt.y, cx, cy);
-        if (i === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-    });
-    ctx.stroke();
-}
-
-// ---------- PHYSICS ----------
-function updatePhysics(dt) {
-    if (pendingMassChange) {
-        pendingMassChange.delayRemaining--;
-        if (pendingMassChange.delayRemaining <= 0) {
-            sunMass = pendingMassChange.newMass;
-            pendingMassChange = null;
-            graphData.recording = true;
+        // High DPI support
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
         }
-    }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
-    const r = Math.hypot(earth.x, earth.y);
-    if (r < 5) return;
+        // Physics constants (scaled for visualization)
+        const G = 1;
+        const INITIAL_SUN_MASS = 1000;
+        const INITIAL_ORBIT_RADIUS = 150;
 
-    const a = G * sunMass / (r * r);
-    earth.vx += (-earth.x / r) * a * dt;
-    earth.vy += (-earth.y / r) * a * dt;
-    earth.x += earth.vx * dt;
-    earth.y += earth.vy * dt;
+        // State
+        let sunMass = INITIAL_SUN_MASS;
+        let targetMass = INITIAL_SUN_MASS;
+        let pendingMassChange = null;
+        let massPercentage = 100;
+        let showTrail = true;
+        let speedMultiplier = 1000;
+        let trail = [];
+        const MAX_TRAIL_LENGTH = 10000;
+        const LIGHT_DELAY_FRAMES = 500;
 
-    if (showTrail) {
-        trail.push({ x: earth.x, y: earth.y });
-        if (trail.length > MAX_TRAIL_LENGTH) trail.shift();
-    }
-}
+        // Graph data
+        const graphData = {
+            velocities: [],
+            distances: [],
+            maxPoints: 200,
+            recording: false
+        };
+        const graphCanvas = document.getElementById('graphCanvas');
+        const graphCtx = graphCanvas.getContext('2d');
 
-// ---------- UI ----------
-function drawZoomIndicator(w, h) {
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.font = '12px JetBrains Mono';
-    ctx.fillText(`Zoom: ${Math.round(camera.zoom * 100)}%`, 15, h - 35);
-    ctx.fillText(
-        `Distance: ${(Math.hypot(earth.x, earth.y) / INITIAL_ORBIT_RADIUS).toFixed(1)} AU`,
-        15,
-        h - 15
-    );
-}
+        // Camera state
+        let camera = {
+            zoom: 1,
+            targetZoom: 1,
+            minZoom: 0.0001,
+            maxZoom: 1,
+            padding: 80
+        };
 
-// ---------- LOOP ----------
-function animate() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    ctx.clearRect(0, 0, rect.width, rect.height);
+        // Earth state
+        let earth = {
+            x: INITIAL_ORBIT_RADIUS,
+            y: 0,
+            vx: 0,
+            vy: Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)
+        };
 
-    updateCamera(rect.width, rect.height);
-    drawStars(rect.width, rect.height);
+        // Stars background
+        const stars = [];
+        for (let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random(),
+                y: Math.random(),
+                size: Math.random() * 1.5 + 0.5,
+                brightness: Math.random() * 0.5 + 0.5
+            });
+        }
 
-    for (let i = 0; i < speedMultiplier; i++) updatePhysics(0.15);
+        function updateCamera(width, height) {
+            const earthDist = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const maxViewDist = Math.min(width, height) / 2 - camera.padding;
+            const neededZoom = maxViewDist / earthDist;
+            camera.targetZoom = Math.max(camera.minZoom, Math.min(camera.maxZoom, neededZoom));
 
-    drawTrail(rect.width / 2, rect.height / 2);
-    drawSun(rect.width / 2, rect.height / 2);
-    drawEarth(rect.width / 2, rect.height / 2);
-    drawZoomIndicator(rect.width, rect.height);
+            if (camera.targetZoom < camera.zoom) {
+                camera.zoom = camera.targetZoom;
+            } else {
+                camera.zoom += (camera.targetZoom - camera.zoom) * 0.1;
+            }
+        }
 
-    requestAnimationFrame(animate);
-}
+        function worldToScreen(worldX, worldY, centerX, centerY) {
+            return {
+                x: centerX + worldX * camera.zoom,
+                y: centerY + worldY * camera.zoom
+            };
+        }
 
-animate();
-</script>
+        function drawStars(width, height) {
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.brightness * 0.4})`;
+                ctx.fill();
+            });
+        }
+
+        function drawSun(centerX, centerY) {
+            // Sun size based on actual gravitational mass (so it disappears when mass is removed)
+            const baseRadius = 30 * (sunMass / INITIAL_SUN_MASS);
+            const radius = Math.max(baseRadius, sunMass > 50 ? 3 : 0) * camera.zoom;
+            const minRadius = sunMass > 50 ? 4 : 0;
+            const drawRadius = Math.max(radius, minRadius);
+
+            if (drawRadius <= 0) return; // Sun has vanished!
+
+            // Outer glow
+            const glowGradient = ctx.createRadialGradient(centerX, centerY, drawRadius * 0.5, centerX, centerY, drawRadius * 4);
+            glowGradient.addColorStop(0, 'rgba(255, 200, 50, 0.3)');
+            glowGradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.1)');
+            glowGradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, drawRadius * 4, 0, Math.PI * 2);
+            ctx.fillStyle = glowGradient;
+            ctx.fill();
+
+            // Corona effect
+            const coronaGradient = ctx.createRadialGradient(centerX, centerY, drawRadius * 0.8, centerX, centerY, drawRadius * 2);
+            coronaGradient.addColorStop(0, 'rgba(255, 220, 100, 0.6)');
+            coronaGradient.addColorStop(1, 'rgba(255, 140, 0, 0)');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, drawRadius * 2, 0, Math.PI * 2);
+            ctx.fillStyle = coronaGradient;
+            ctx.fill();
+
+            // Sun body
+            const sunGradient = ctx.createRadialGradient(centerX - drawRadius * 0.3, centerY - drawRadius * 0.3, 0, centerX, centerY, drawRadius);
+            sunGradient.addColorStop(0, '#fff8e7');
+            sunGradient.addColorStop(0.3, '#ffd93d');
+            sunGradient.addColorStop(0.7, '#ff8c00');
+            sunGradient.addColorStop(1, '#ff6b00');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, drawRadius, 0, Math.PI * 2);
+            ctx.fillStyle = sunGradient;
+            ctx.fill();
+        }
+
+        function drawEarth(centerX, centerY, earthX, earthY) {
+            const pos = worldToScreen(earthX, earthY, centerX, centerY);
+            const x = pos.x;
+            const y = pos.y;
+            const baseRadius = 8;
+            const radius = Math.max(baseRadius * camera.zoom, 5);
+
+            // Glow
+            const glowGradient = ctx.createRadialGradient(x, y, radius * 0.5, x, y, radius * 2.5);
+            glowGradient.addColorStop(0, 'rgba(74, 144, 217, 0.4)');
+            glowGradient.addColorStop(1, 'rgba(74, 144, 217, 0)');
+            ctx.beginPath();
+            ctx.arc(x, y, radius * 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = glowGradient;
+            ctx.fill();
+
+            // Earth body
+            const earthGradient = ctx.createRadialGradient(x - radius * 0.3, y - radius * 0.3, 0, x, y, radius);
+            earthGradient.addColorStop(0, '#6bb3f0');
+            earthGradient.addColorStop(0.5, '#4a90d9');
+            earthGradient.addColorStop(0.7, '#3d8b40');
+            earthGradient.addColorStop(1, '#2d6930');
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = earthGradient;
+            ctx.fill();
+        }
+
+        function drawTrail(centerX, centerY) {
+            if (!showTrail || trail.length < 2) return;
+
+            ctx.beginPath();
+            const firstPos = worldToScreen(trail[0].x, trail[0].y, centerX, centerY);
+            ctx.moveTo(firstPos.x, firstPos.y);
+
+            for (let i = 1; i < trail.length; i++) {
+                const pos = worldToScreen(trail[i].x, trail[i].y, centerX, centerY);
+                ctx.lineTo(pos.x, pos.y);
+            }
+
+            ctx.strokeStyle = 'rgba(74, 144, 217, 0.6)';
+            ctx.lineWidth = Math.max(2 * camera.zoom, 1.5);
+            ctx.stroke();
+        }
+
+        function drawInitialOrbit(centerX, centerY, width, height) {
+            const orbitRadius = INITIAL_ORBIT_RADIUS * camera.zoom;
+            // Only draw if it's visible (at least 2px)
+            if (orbitRadius < 2) return;
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.setLineDash([8, 8]);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawZoomIndicator(width, height) {
+            const zoomPercent = Math.round(camera.zoom * 100);
+            const distanceAU = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / INITIAL_ORBIT_RADIUS;
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.font = '12px "JetBrains Mono", monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Zoom: ${zoomPercent}%`, 15, height - 35);
+            ctx.fillText(`Distance: ${distanceAU.toFixed(1)} AU`, 15, height - 15);
+        }
+
+        function updateLightDelayUI() {
+            const indicator = document.getElementById('lightDelayIndicator');
+            const progress = document.getElementById('delayProgress');
+            const timeDisplay = document.getElementById('delayTime');
+
+            if (pendingMassChange) {
+                indicator.style.display = 'block';
+                const progressPercent = ((LIGHT_DELAY_FRAMES - pendingMassChange.delayRemaining) / LIGHT_DELAY_FRAMES) * 100;
+                progress.style.width = progressPercent + '%';
+                const minutesLeft = ((pendingMassChange.delayRemaining / LIGHT_DELAY_FRAMES) * 8.3).toFixed(1);
+                timeDisplay.textContent = minutesLeft + ' min left';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+
+        function drawGraph() {
+            const width = graphCanvas.width;
+            const height = graphCanvas.height;
+
+            graphCtx.clearRect(0, 0, width, height);
+
+            if (graphData.velocities.length < 2) return;
+
+            const maxVel = Math.max(...graphData.velocities, 1);
+            const maxDist = Math.max(...graphData.distances, 1);
+
+            const padding = 5;
+            const graphWidth = width - padding * 2;
+            const graphHeight = height - padding * 2;
+
+            // Draw velocity line (blue)
+            graphCtx.beginPath();
+            graphCtx.strokeStyle = '#4a90d9';
+            graphCtx.lineWidth = 2;
+            for (let i = 0; i < graphData.velocities.length; i++) {
+                const x = padding + (i / graphData.maxPoints) * graphWidth;
+                const y = height - padding - (graphData.velocities[i] / maxVel) * graphHeight;
+                if (i === 0) graphCtx.moveTo(x, y);
+                else graphCtx.lineTo(x, y);
+            }
+            graphCtx.stroke();
+
+            // Draw distance line (red)
+            graphCtx.beginPath();
+            graphCtx.strokeStyle = '#ff4757';
+            graphCtx.lineWidth = 2;
+            for (let i = 0; i < graphData.distances.length; i++) {
+                const x = padding + (i / graphData.maxPoints) * graphWidth;
+                const y = height - padding - (graphData.distances[i] / maxDist) * graphHeight;
+                if (i === 0) graphCtx.moveTo(x, y);
+                else graphCtx.lineTo(x, y);
+            }
+            graphCtx.stroke();
+
+            graphCtx.fillStyle = '#4a90d9';
+            graphCtx.font = '10px "JetBrains Mono", monospace';
+            graphCtx.textAlign = 'right';
+            const currentVel = graphData.velocities[graphData.velocities.length - 1] || 0;
+            const currentDist = graphData.distances[graphData.distances.length - 1] || 0;
+            graphCtx.fillText(`v: ${(currentVel * 29.78 / 2.58).toFixed(1)} km/s`, width - 5, 15);
+            graphCtx.fillStyle = '#ff4757';
+            graphCtx.fillText(`d: ${currentDist.toFixed(1)} AU`, width - 5, 28);
+        }
+
+        function recordGraphData() {
+            if (!graphData.recording) return;
+
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y) / INITIAL_ORBIT_RADIUS;
+
+            graphData.velocities.push(v);
+            graphData.distances.push(r);
+
+            if (graphData.velocities.length > graphData.maxPoints) {
+                graphData.velocities.shift();
+                graphData.distances.shift();
+            }
+        }
+
+        function updatePhysics(dt) {
+            if (pendingMassChange) {
+                pendingMassChange.delayRemaining -= 1;
+                if (pendingMassChange.delayRemaining <= 0) {
+                    sunMass = pendingMassChange.newMass;
+                    pendingMassChange = null;
+                    graphData.recording = true;
+                }
+            }
+
+            const dx = -earth.x;
+            const dy = -earth.y;
+            const r = Math.sqrt(dx * dx + dy * dy);
+
+            if (r > 5) {
+                const F = G * sunMass / (r * r);
+                const ax = F * dx / r;
+                const ay = F * dy / r;
+
+                const oldX = earth.x;
+                const oldY = earth.y;
+
+                earth.vx += ax * dt;
+                earth.vy += ay * dt;
+                earth.x += earth.vx * dt;
+                earth.y += earth.vy * dt;
+
+                // Record trail based on distance traveled, not time
+                if (showTrail) {
+                    const lastTrailPoint = trail.length > 0 ? trail[trail.length - 1] : null;
+                    const minTrailDistance = 2; // minimum distance between trail points
+
+                    if (!lastTrailPoint) {
+                        trail.push({ x: earth.x, y: earth.y });
+                    } else {
+                        const distFromLast = Math.sqrt(
+                            (earth.x - lastTrailPoint.x) ** 2 + 
+                            (earth.y - lastTrailPoint.y) ** 2
+                        );
+                        if (distFromLast >= minTrailDistance) {
+                            trail.push({ x: earth.x, y: earth.y });
+                            if (trail.length > MAX_TRAIL_LENGTH) {
+                                trail.shift();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function calculateEnergy() {
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            const kinetic = 0.5 * v * v;
+            const potential = -G * sunMass / r;
+            return kinetic + potential;
+        }
+
+        function getOrbitType() {
+            const energy = calculateEnergy();
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            // Scale tolerance based on current energy magnitude for better detection
+            const tolerance = 0.01 * Math.max(Math.abs(0.5 * v * v), Math.abs(G * sunMass / r), 0.01);
+
+            if (Math.abs(sunMass - INITIAL_SUN_MASS) < 1) {
+                return 'circular';
+            } else if (Math.abs(energy) < tolerance) {
+                return 'parabolic';
+            } else if (energy < 0) {
+                return 'elliptical';
+            } else {
+                return 'hyperbolic';
+            }
+        }
+
+        function updateStats() {
+            const r = Math.sqrt(earth.x * earth.x + earth.y * earth.y);
+            const v = Math.sqrt(earth.vx * earth.vx + earth.vy * earth.vy);
+            const escapeV = Math.sqrt(2 * G * sunMass / r);
+            const energy = calculateEnergy();
+
+            const realV = (v / Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)) * 29.78;
+            const realEscapeV = (escapeV / Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)) * 29.78 * Math.sqrt(2);
+            const realDistance = r / INITIAL_ORBIT_RADIUS;
+
+            document.getElementById('velocityStat').textContent = realV.toFixed(2) + ' km/s';
+            document.getElementById('escapeStat').textContent = realEscapeV.toFixed(2) + ' km/s';
+            document.getElementById('distanceStat').textContent = realDistance.toFixed(2) + ' AU';
+
+            const energyEl = document.getElementById('energyStat');
+            if (Math.abs(energy) < 0.001) {
+                energyEl.textContent = '≈ 0 J/kg';
+                energyEl.className = 'stat-value';
+            } else if (energy < 0) {
+                energyEl.textContent = '< 0 (bound)';
+                energyEl.className = 'stat-value bound';
+            } else {
+                energyEl.textContent = '> 0 (unbound)';
+                energyEl.className = 'stat-value escape';
+            }
+
+            const orbitType = getOrbitType();
+            const statusEl = document.getElementById('orbitStatus');
+            statusEl.className = 'orbit-status ' + orbitType;
+
+            const statusTexts = {
+                circular: 'Stable Circular Orbit',
+                elliptical: 'Bound Elliptical Orbit',
+                parabolic: 'Parabolic Escape (E = 0)',
+                hyperbolic: 'Hyperbolic Escape'
+            };
+            statusEl.textContent = statusTexts[orbitType];
+        }
+
+        function animate() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            ctx.clearRect(0, 0, width, height);
+
+            updateCamera(width, height);
+
+            drawStars(width, height);
+            drawInitialOrbit(centerX, centerY, width, height);
+
+            for (let i = 0; i < speedMultiplier; i++) {
+                updatePhysics(0.15);
+            }
+
+            drawTrail(centerX, centerY);
+            drawSun(centerX, centerY);
+            drawEarth(centerX, centerY, earth.x, earth.y);
+
+            drawZoomIndicator(width, height);
+
+            updateLightDelayUI();
+            recordGraphData();
+            drawGraph();
+            updateStats();
+
+            requestAnimationFrame(animate);
+        }
+
+        function resetSimulation() {
+            sunMass = INITIAL_SUN_MASS;
+            targetMass = INITIAL_SUN_MASS;
+            pendingMassChange = null;
+            massPercentage = 100;
+            camera.zoom = 1;
+            camera.targetZoom = 1;
+            graphData.velocities = [];
+            graphData.distances = [];
+            graphData.recording = false;
+            earth = {
+                x: INITIAL_ORBIT_RADIUS,
+                y: 0,
+                vx: 0,
+                vy: Math.sqrt(G * INITIAL_SUN_MASS / INITIAL_ORBIT_RADIUS)
+            };
+            trail = [];
+            document.getElementById('massSlider').value = 100;
+            document.getElementById('massValue').textContent = '100%';
+            document.getElementById('lightDelayIndicator').style.display = 'none';
+            graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            updateStats();
+        }
+
+        // Event listeners
+        document.getElementById('massSlider').addEventListener('input', (e) => {
+            massPercentage = parseInt(e.target.value);
+            massPercentage = parseFloat(e.target.value);
+            document.getElementById('massValue').textContent = massPercentage + '%';
+        });
+
+        document.getElementById('applyMass').addEventListener('click', () => {
+            trail = [];
+            const newMass = INITIAL_SUN_MASS * (massPercentage / 100);
+            pendingMassChange = {
+                newMass: newMass,
+                delayRemaining: LIGHT_DELAY_FRAMES
+            };
+            targetMass = newMass;
+        });
+
+        document.getElementById('speedSlider').addEventListener('input', (e) => {
+            const speeds = [1, 5, 20, 50, 100, 500, 1000];
+            const speedIndex = parseInt(e.target.value) - 1;
+            speedMultiplier = speeds[speedIndex];
+            document.getElementById('speedValue').textContent = speeds[speedIndex] + '×';
+
+            document.querySelectorAll('.speed-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i <= speedIndex);
+            });
+        });
+
+        document.getElementById('trailToggle').addEventListener('click', (e) => {
+            showTrail = !showTrail;
+            e.target.classList.toggle('active', showTrail);
+            if (!showTrail) trail = [];
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', resetSimulation);
+
+        // Start
+        updateStats();
+        animate();
+    </script>
 </body>
 </html>
